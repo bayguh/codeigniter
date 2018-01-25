@@ -1,6 +1,6 @@
 <?php
 
-class TestLogic
+class SampleLogic
 {
     private $CI;
 
