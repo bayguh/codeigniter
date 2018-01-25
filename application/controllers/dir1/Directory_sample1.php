@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Folder_test1 extends CI_Controller
+class Dirctory_sample1 extends CI_Controller
 {
     public function __construct()
     {
@@ -10,7 +10,7 @@ class Folder_test1 extends CI_Controller
 
     public function index($param1 = null, $param2 = null)
     {
-        echo 'FolderTest1';
+        echo 'DirectorySample1';
 
         if (!is_null($param1)) {
             echo '<br/ >param1: ' . $param1;
