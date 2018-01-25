@@ -69,6 +69,7 @@ class MY_Model extends CI_Model
         $query = $this->get($this->table_name, $limit, $offset);
         if ($query->num_rows()) {
             $record = $query->row_array();
+            $record = $this->get_cast($record, false);
         }
 
         return $record;
@@ -91,8 +92,86 @@ class MY_Model extends CI_Model
         }
         $query = $this->get($this->table_name, $limit, $offset);
         $records = $query->result_array();
+        $records = $this->get_cast($records, true);
 
         return $records;
+    }
+
+        /**
+     * modelに定義した型情報でキャストする
+     *
+     * @param 取得したレコードデータ
+     * @param テーブル名
+     * @return キャストされたレコードデータ
+     */
+    public function get_cast($result_data, $list_flag)
+    {
+        // 取得レコードがない場合
+        if (is_null($result_data) || count($result_data) == 0) {
+            return $result_data;
+        } else {
+            if (empty($this->column_list)) {
+                return $result_data;
+            }
+
+            // 取得レコードが1件の場合
+            if ($list_flag == false) {
+                $result_data = $this->cast_execute($result_data, $this->column_list);
+            } else {
+                foreach ($result_data as $key => $value) {
+                    $result_data[$key] = $this->cast_execute($value, $this->column_list);
+                }
+            }
+            return $result_data;
+        }
+    }
+
+    /**
+     * キャストを実行する
+     *
+     * @param 取得したレコードデータ
+     * @param カラムリスト
+     * @return キャストされたレコードデータ
+     */
+    public function cast_execute($result_data, $column_list)
+    {
+        foreach ($result_data as $key => $value) {
+            if (isset($column_list[$key])) {
+                if (is_null($value)) {
+                    $result_data[$key] = null;
+                } else {
+                    switch ($column_list[$key]) {
+                        case 'int':
+                        case 'integer':
+                            if (PHP_INT_MAX < $value) {
+                                $result_data[$key] = (string) $value;
+                            } else {
+                                $result_data[$key] = (int) $value;
+                            }
+
+                            break;
+
+                        case 'double':
+                        case 'float':
+                            $result_data[$key] = (double) $value;
+                            break;
+
+                        case 'string':
+                            $result_data[$key] = (string) $value;
+                            break;
+
+                        case 'bool':
+                        case 'boolean':
+                            $result_data[$key] = (bool) $value;
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+        return $result_data;
     }
 
     /**
