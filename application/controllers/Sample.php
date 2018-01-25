@@ -25,7 +25,7 @@ class Sample extends CI_Controller
     public function sample()
     {
         $user_id = 1;
-        $result = $this->samlpelogic->sample($user_id);
+        $result = $this->samplelogic->sample($user_id);
         $this->output->output_json($result);
     }
 }
