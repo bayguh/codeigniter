@@ -7,7 +7,7 @@ class Sample extends CI_Controller
     {
         parent::__construct();
 
-        $this->load->library('SamlpeLogic');
+        $this->load->library('SampleLogic');
     }
 
     public function index($param1 = null, $param2 = null)
